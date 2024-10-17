@@ -272,4 +272,15 @@ class VVMTools:
         
         # Combine and return the results
         return np.squeeze(np.array(results))
-#%%
+
+    def cal_TKE(self, t):
+        u = np.squeeze(self.get_var("u", t).to_numpy())
+        v = np.squeeze(self.get_var("v", t).to_numpy())
+        w = np.squeeze(self.get_var("w", t).to_numpy())
+    
+        u_inter = (u[:, :, 1:] + u[:, :, :-1])[1:, 1:] / 2
+        v_inter = (v[:, 1:] + v[:, :-1])[1:, :, 1:] / 2
+        w_inter = (w[1:] + w[:-1])[:, 1:, 1:] / 2
+        TKE = np.mean(u_inter ** 2 + v_inter ** 2 + w_inter ** 2, axis=(1, 2))
+        return TKE
+
